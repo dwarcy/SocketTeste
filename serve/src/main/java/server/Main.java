@@ -13,7 +13,7 @@ public class Main {
         SocketIOServer server = new SocketIOServer(config);
         
         server.start();
-        System.out.println("Server inicializado em: http://" + config.get;
+        System.out.println("Server inicializado em: http://" + config.getHostname() + ":" + config.getPort());
 
     }
 }
