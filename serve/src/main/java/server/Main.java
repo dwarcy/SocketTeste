@@ -1,17 +1,18 @@
 package server;
 
 import com.corundumstudio.socketio.*;
+import com.corundumstudio.socketio.listener.DataListener;
 
 public class Main {
     public static void main(String[] args) {
 
         Configuration config = new Configuration();
         config.setHostname("localhost");
-        config.setPort(3001);
+        config.setPort(4001);
 
         SocketIOServer server = new SocketIOServer(config);
-        /*SocketConfig sockConfig = new SocketConfig();
-        sockConfig.setReuseAddress(true);*/
+        SocketConfig sockConfig = new SocketConfig();
+        sockConfig.setReuseAddress(true);
 
         server.addConnectListener(client -> {
             System.out.println("\n" + //
@@ -33,6 +34,16 @@ public class Main {
                     "#  (____/(____)(____/ \\___)\\__/ \\_)__)(____)\\___) (__)\\_/\\_/(____/ \\__/ \n" + //
                     "\n" + //
                     "");
+        });
+
+        server.addEventListener("emiteMensagem", String.class, new DataListener<String>() {
+
+            @Override
+            public void onData(SocketIOClient client, String data, AckRequest ackSender) throws Exception {
+                System.out.println("Mensagem Recebida do cliente: " + data);
+                ackSender.sendAckData("teste do ack");
+            }
+            
         });
         
         server.start();

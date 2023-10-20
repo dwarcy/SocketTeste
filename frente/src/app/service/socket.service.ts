@@ -7,8 +7,10 @@ import io from 'socket.io-client'
 })
 export class SocketService {
 
-  socket = io('http://localhost:3001', { transports: ['polling','websocket'] })
+  socket = io('http://localhost:4001', { transports: ['polling','websocket'] })
 
-  constructor() { }
+  constructor() {} 
+
+
 
 }
