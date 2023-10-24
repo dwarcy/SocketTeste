@@ -1,7 +1,13 @@
 package server;
 
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONObject;
+
 import com.corundumstudio.socketio.*;
 import com.corundumstudio.socketio.listener.DataListener;
+//import com.fasterxml.jackson.databind.util.JSONPObject;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,6 +21,15 @@ public class Main {
         sockConfig.setReuseAddress(true);
 
         server.addConnectListener(client -> {
+            Map<String, List<String>> querySent = client.getHandshakeData().getUrlParams();             // Recebe todos parâmetros enviados pelo query em um MAP
+            String jsonString = querySent.get("json").get(0);                                           // Guarda o parâmetro 'json' dentro da string jsonString
+            JSONObject jsonObject = new JSONObject(jsonString);                                         // Tranforma a string novamente em um objeto JSON
+
+            // guarda as dados das respectivas chaves em variáveis
+            int clientId = jsonObject.getInt("clientId");                                               
+            String nome = jsonObject.getString("nome");
+            String message = jsonObject.getString("message");
+            
             System.out.println("\n" + //
                     "\n" + //
                     "#    ___  __   __ _  ____  ___  ____  __   ____   __  \n" + //
@@ -23,6 +38,11 @@ public class Main {
                     "#   \\___)\\__/ \\_)__)(____)\\___) (__)\\_/\\_/(____/ \\__/ \n" + //
                     "\n" + //
                     "");
+            
+            System.out.println("ClientID: " + clientId);
+            System.out.println("Nome: " + nome);
+            System.out.println("Message: " + message);
+
         });
         
         server.addDisconnectListener(client -> {
@@ -41,7 +61,7 @@ public class Main {
             @Override
             public void onData(SocketIOClient client, String data, AckRequest ackSender) throws Exception {
                 System.out.println("Mensagem Recebida do cliente: " + data);
-                ackSender.sendAckData("teste do ack");
+                ackSender.sendAckData("Mensagem enviada do ack");
             }
             
         });

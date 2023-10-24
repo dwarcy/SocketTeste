@@ -10,23 +10,26 @@ import { SocketService } from '../service/socket.service';
 })
 export class HomeComponent {
 
-  public teste: SocketService = new SocketService
-
-  constructor() {
-    //console.log("OLA TESTE")
+  public infoJson: object = {
+    "clientId": 100,
+    "nome": "Jose",
+    "message": "Mensagem do Usuário Jose",
   }
+
+  constructor(private teste: SocketService) {}
 
   ngOnInit() {
 
-    //this.conectaCliente()
+    const jsonString = JSON.stringify(this.infoJson)
+
+    this.teste.connectToServer({ json: jsonString })
 
   }
 
-
   public conectaCliente(): void {
 
-    this.teste.socket.emit('emiteMensagem', "Ola. Mensagem enviada do Cliente", (response: string) => {
-      console.log(response)
+    this.teste.emit('emiteMensagem', "Mensagem Enviada do Cliente", (responde: any) => {
+      console.log(responde)
     })
 
   }
